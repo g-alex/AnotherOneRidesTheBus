@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package fr.alma.aortb;
 
 /**
@@ -11,4 +10,6 @@ package fr.alma.aortb;
  */
 public class Main {
 
+    public static void main(String[] args) {
+    }
 }

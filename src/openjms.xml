@@ -41,9 +41,26 @@
 
   <!-- Optional. If not specified, no destinations will be created -->
   <AdministeredDestinations>
-    <AdministeredTopic name="topic1">
-      <Subscriber name="sub1" />
+    <AdministeredTopic name="war">
+      <Subscriber name="philip" />
     </AdministeredTopic>
+    <AdministeredTopic name="politics">
+      <Subscriber name="maurice" />
+    </AdministeredTopic>
+    <AdministeredTopic name="cooking">
+      <Subscriber name="dany" />
+    </AdministeredTopic>
+    <AdministeredTopic name="cricket">
+      <Subscriber name="doug" />
+    </AdministeredTopic>
+    <AdministeredTopic name="golf">
+      <Subscriber name="maurice" />
+    </AdministeredTopic>
+    <AdministeredTopic name="wow">
+      <Subscriber name="napoleon" />
+    </AdministeredTopic>
+    <AdministeredQueue name="poolToChief" />
+    <AdministeredQueue name="editorsToChief" />
   </AdministeredDestinations>
 
   <!-- Optional. If not specified, no users will be created -->
