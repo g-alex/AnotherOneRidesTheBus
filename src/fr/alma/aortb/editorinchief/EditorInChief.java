@@ -5,22 +5,13 @@
 
 package fr.alma.aortb.editorinchief;
 
-import javax.jms.Message;
-import javax.jms.MessageListener;
-
 /**
  *
  * @author judu
  */
-public class EditorInChief implements MessageListener {
+public class EditorInChief {
 
 
 
-   
-
-
-   public void onMessage(Message msg) {
-      throw new UnsupportedOperationException("Not supported yet.");
-   }
 
 }
