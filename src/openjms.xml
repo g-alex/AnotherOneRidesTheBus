@@ -44,18 +44,6 @@
     <AdministeredTopic name="war">
       <Subscriber name="philip" />
     </AdministeredTopic>
-    <AdministeredTopic name="politics">
-      <Subscriber name="maurice" />
-    </AdministeredTopic>
-    <AdministeredTopic name="cooking">
-      <Subscriber name="dany" />
-    </AdministeredTopic>
-    <AdministeredTopic name="cricket">
-      <Subscriber name="doug" />
-    </AdministeredTopic>
-    <AdministeredTopic name="golf">
-      <Subscriber name="maurice" />
-    </AdministeredTopic>
     <AdministeredTopic name="wow">
       <Subscriber name="napoleon" />
     </AdministeredTopic>
