@@ -24,7 +24,7 @@ import javax.naming.NamingException;
  *
  * @author judu
  */
-public class EditorInChief implements Runnable {
+public class EditorInChief {
 
    static private EditorInChief instance;
 
