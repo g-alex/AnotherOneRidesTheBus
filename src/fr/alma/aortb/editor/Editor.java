@@ -5,7 +5,6 @@
 package fr.alma.aortb.editor;
 
 import fr.alma.aortb.Main;
-import java.io.Reader;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,7 +57,8 @@ public class Editor {
 
     }
 
-    void sendToChief(Message msg) {
+
+    /*package*/ void sendToChief(Message msg) {
         try {
             Destination chiefDest = (Queue) context.lookup(properties.getProperty("aortb.edtochief"));
             MessageProducer prod = session.createProducer(chiefDest);
