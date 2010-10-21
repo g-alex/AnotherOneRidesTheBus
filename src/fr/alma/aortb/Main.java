@@ -4,7 +4,6 @@
  */
 package fr.alma.aortb;
 
-import fr.alma.aortb.editor.Editor;
 import fr.alma.aortb.editor.EditorManager;
 import fr.alma.aortb.editorinchief.EditorInChief;
 import fr.alma.aortb.newspool.NewsPool;
