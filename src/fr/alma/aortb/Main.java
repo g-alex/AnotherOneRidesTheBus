@@ -5,6 +5,7 @@
 package fr.alma.aortb;
 
 import fr.alma.aortb.editor.Editor;
+import fr.alma.aortb.editor.EditorManager;
 import fr.alma.aortb.editorinchief.EditorInChief;
 import fr.alma.aortb.newspool.NewsPool;
 import java.io.BufferedReader;
@@ -58,6 +59,8 @@ public class Main {
             EditorInChief eic = EditorInChief.getInstance();
             eic.run();
 
+            EditorManager.getInstance().pushEditor(props.getProperty("aortb.topic.war"));
+            EditorManager.getInstance().pushEditor(props.getProperty("aortb.topic.wow"));
 
             NewsPool np = new NewsPool();
             String path = askForFile();
