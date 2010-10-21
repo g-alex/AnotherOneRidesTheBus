@@ -81,7 +81,7 @@ public class EditorInChief {
       }
    }
 
-   public EditorInChief getInstance() {
+   public static EditorInChief getInstance() {
       if (instance == null) {
          instance = new EditorInChief();
       }
