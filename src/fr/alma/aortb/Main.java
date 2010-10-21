@@ -57,6 +57,8 @@ public class Main {
          try {
             EditorInChief eic = EditorInChief.getInstance();
             eic.run();
+
+
             NewsPool np = new NewsPool();
             String path = askForFile();
             fr = new FileReader(path);
