@@ -24,7 +24,7 @@ import javax.naming.NamingException;
  *
  * @author judu
  */
-public class EditorInChief {
+public class EditorInChief implements Runnable {
 
    static private EditorInChief instance;
 
@@ -44,10 +44,6 @@ public class EditorInChief {
          Connection connection = factory.createConnection();
          session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
          connection.start();
-
-         listenToEditors();
-         listenToPool();
-
       } catch (JMSException ex) {
          Logger.getLogger(EditorInChief.class.getName()).log(Level.SEVERE, null, ex);
       } catch (NamingException ex) {
@@ -88,7 +84,6 @@ public class EditorInChief {
       return instance;
    }
 
-
    public void addID(Integer id) {
       this.ids.add(id);
    }
@@ -99,5 +94,10 @@ public class EditorInChief {
 
    public void removeID(Integer id) {
       this.ids.remove(id);
+   }
+
+   public void run() {
+      listenToEditors();
+      listenToPool();
    }
 }

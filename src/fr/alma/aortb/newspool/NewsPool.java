@@ -20,6 +20,7 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.MapMessage;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
@@ -166,8 +167,9 @@ public class NewsPool {
 
    private void sendNews(MessageProducer wowProd, String aNews) {
       try {
-         TextMessage msg = session.createTextMessage();
-         msg.setText(aNews);
+         MapMessage msg = session.createMapMessage();
+         msg.setInt(properties.getProperty("aortb.field.id"), currId);
+         msg.setString(properties.getProperty("aortb.field.content"), aNews);
          wowProd.send(msg);
       } catch (JMSException ex) {
          Logger.getLogger(NewsPool.class.getName()).log(Level.SEVERE, null, ex);

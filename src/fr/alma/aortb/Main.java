@@ -4,6 +4,8 @@
  */
 package fr.alma.aortb;
 
+import fr.alma.aortb.editor.Editor;
+import fr.alma.aortb.editorinchief.EditorInChief;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -43,7 +45,10 @@ public class Main {
    }
 
    public void go() {
-      
+
+      EditorInChief eic = EditorInChief.getInstance();
+      eic.run();
+
    }
 
    public Properties getProps() {
