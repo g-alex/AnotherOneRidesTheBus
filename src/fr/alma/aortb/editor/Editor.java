@@ -68,7 +68,7 @@ public class Editor {
                 Destination chiefDest = (Queue) context.lookup(properties.getProperty("aortb.edtochief"));
                 MessageProducer prod = session.createProducer(chiefDest);
                 String content = properties.getProperty("aortb.field.content");
-                mmsg.setString(content, topic.toString() + mmsg.getString(content));
+                mmsg.setString(content, topic.getTopicName() + mmsg.getString(content));
 
                 prod.send(mmsg);
                 Logger.getLogger("fr.alma.aortb.editor.Editor").log(Level.INFO, "Send to ChiefEditor {0} with id {1}", new Object[]{mmsg.getString(content), mmsg.getInt(properties.getProperty("aortb.field.id"))});
