@@ -5,6 +5,8 @@
 package fr.alma.aortb.editorinchief;
 
 import fr.alma.aortb.Main;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.jms.Connection;
@@ -26,18 +28,52 @@ public class EditorInChief {
 
    static private EditorInChief instance;
 
+   private Session session;
+
+   private Context context;
+
+   private Set<Integer> ids;
+
    private EditorInChief() {
       try {
-         Context context = new InitialContext(Main.getInstance().getProps());
+
+         ids = new HashSet<Integer>();
+
+         context = new InitialContext(Main.getInstance().getProps());
          ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
          Connection connection = factory.createConnection();
-         Destination dest = (Destination) context.lookup(Main.getInstance().getProps().getProperty("aortb.pooltochief"));
-         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-         MessageConsumer consumer = session.createConsumer(dest);
-         MessageListener edListener = (MessageListener) new EditorInChief();
-         consumer.setMessageListener(edListener);
-
+         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
          connection.start();
+
+         listenToEditors();
+         listenToPool();
+
+      } catch (JMSException ex) {
+         Logger.getLogger(EditorInChief.class.getName()).log(Level.SEVERE, null, ex);
+      } catch (NamingException ex) {
+         Logger.getLogger(EditorInChief.class.getName()).log(Level.SEVERE, null, ex);
+      }
+   }
+
+   private void listenToPool() {
+      try {
+         Destination dest = (Destination) context.lookup(Main.getInstance().getProps().getProperty("aortb.pooltochief"));
+         MessageConsumer consumer = session.createConsumer(dest);
+         MessageListener listener = new PoolToChiefListener();
+         consumer.setMessageListener(listener);
+      } catch (JMSException ex) {
+         Logger.getLogger(EditorInChief.class.getName()).log(Level.SEVERE, null, ex);
+      } catch (NamingException ex) {
+         Logger.getLogger(EditorInChief.class.getName()).log(Level.SEVERE, null, ex);
+      }
+   }
+
+   private void listenToEditors() {
+      try {
+         Destination dest = (Destination) context.lookup(Main.getInstance().getProps().getProperty("aortb.edtochief"));
+         MessageConsumer consumer = session.createConsumer(dest);
+         MessageListener listener = new EdToChiefListener();
+         consumer.setMessageListener(listener);
       } catch (JMSException ex) {
          Logger.getLogger(EditorInChief.class.getName()).log(Level.SEVERE, null, ex);
       } catch (NamingException ex) {
@@ -50,5 +86,18 @@ public class EditorInChief {
          instance = new EditorInChief();
       }
       return instance;
+   }
+
+
+   public void addID(Integer id) {
+      this.ids.add(id);
+   }
+
+   public Boolean hasID(Integer id) {
+      return this.ids.contains(id);
+   }
+
+   public void removeID(Integer id) {
+      this.ids.remove(id);
    }
 }
