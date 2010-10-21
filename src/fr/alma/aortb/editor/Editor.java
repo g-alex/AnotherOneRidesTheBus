@@ -16,6 +16,7 @@ import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
@@ -50,13 +51,8 @@ public class Editor {
     public void readAndSend(Reader reader) {
         try {
             MessageConsumer consumer = session.createConsumer(topic);
-            Message msg = consumer.receive();
-            if (!(msg instanceof MapMessage)) {
-                return;
-            }
-            MapMessage tmsg = (MapMessage) msg;
-
-            sendToChief(msg);
+            MessageListener listener = new PoolToEditorListener(this);
+            consumer.setMessageListener(listener);
         } catch (JMSException ex) {
             Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -64,7 +60,7 @@ public class Editor {
 
     }
 
-    private void sendToChief(Message msg) {
+    void sendToChief(Message msg) {
         try {
             Destination chiefDest = (Queue) context.lookup(properties.getProperty("aortb.edtochief"));
             MessageProducer prod = session.createProducer(chiefDest);

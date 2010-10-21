@@ -32,7 +32,7 @@ public class EdToChiefListener implements MessageListener {
             Integer id = mmsg.getInt(properties.getProperty("aortb.field.id"));
             if (EditorInChief.getInstance().hasID(id)) {
                 EditorInChief.getInstance().removeID(id);
-                System.out.println("News " + id + ": " + DepecheMode.parseDepeche(mmsg.getString(properties.getProperty("aortb.field.content"))));
+                System.out.println("News " + id + ": " + mmsg.getString(properties.getProperty("aortb.field.content")));
             } else {
                 Logger.getAnonymousLogger().log(Level.INFO, "Got unidentified news");
             }

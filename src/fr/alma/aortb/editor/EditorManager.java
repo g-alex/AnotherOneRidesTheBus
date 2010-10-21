@@ -59,7 +59,8 @@ public class EditorManager {
 
     public void pushEditor(String topic) {
         try {
-            edPool.add(new Editor((Topic) context.lookup(topic)));
+            Editor ed=new Editor((Topic) context.lookup(topic));
+            edPool.add(ed);
         } catch (JMSException ex) {
             Logger.getLogger(EditorManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NamingException ex) {
