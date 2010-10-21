@@ -30,57 +30,66 @@ import javax.naming.NamingException;
  */
 public class Editor {
 
-    private final Context context;
-    private final Properties properties;
-    private final Session session;
-    private final Topic topic;
+   private final Context context;
 
-    public Editor(Topic topic) throws NamingException, JMSException {
-        this.topic = topic;
-        this.properties = Main.props;
-        this.context = new InitialContext(this.properties);
-        ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
-        Connection connection = (Connection) factory.createConnection();
+   private final Properties properties;
 
-        this.session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        connection.start();
-    }
+   private final Session session;
 
-    public void readAndSend() {
-        try {
-            MessageConsumer consumer = session.createConsumer(topic);
-            MessageListener listener = new PoolToEditorListener(this);
-            consumer.setMessageListener(listener);
-        } catch (JMSException ex) {
+   private final Topic topic;
+
+   public Editor(Topic topic) throws NamingException, JMSException {
+      this.topic = topic;
+      this.properties = Main.props;
+      this.context = new InitialContext(this.properties);
+      ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
+      Connection connection = (Connection) factory.createConnection();
+
+      this.session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+      connection.start();
+   }
+
+   public void readAndSend() {
+      try {
+         MessageConsumer consumer = session.createConsumer(topic);
+         MessageListener listener = new PoolToEditorListener(this);
+         consumer.setMessageListener(listener);
+      } catch (JMSException ex) {
+         Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
+      }
+
+
+   }
+
+
+   /*package*/ void sendToChief(Message msg) {
+      if (!(msg instanceof MapMessage)) {
+         return;
+      } else {
+
+         try {
+            String content = properties.getProperty("aortb.field.content");
+            String id = properties.getProperty("aortb.field.id");
+
+            Destination chiefDest = (Queue) context.lookup(properties.getProperty("aortb.edtochief"));
+            MessageProducer prod = session.createProducer(chiefDest);
+
+            MapMessage mmsg = session.createMapMessage();
+            mmsg.setInt(id, ((MapMessage) msg).getInt(id));
+            mmsg.setString(content, "Topic = " + topic.getTopicName() + "; content = " + ((MapMessage) msg).getString(content));
+
+
+            prod.send(mmsg);
+            Logger.getLogger("fr.alma.aortb.editor.Editor").log(Level.INFO, "Send to ChiefEditor {0} with id {1}", new Object[]{mmsg.getString(content), mmsg.getInt(id)});
+         } catch (JMSException ex) {
             Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
-        }
+         } catch (NamingException ex) {
+            Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }
+   }
 
-
-    }
-
-
-    /*package*/ void sendToChief(Message msg) {
-        if (!(msg instanceof MapMessage)) {
-            return;
-        } else {
-            MapMessage mmsg = (MapMessage) msg;
-            try {
-                Destination chiefDest = (Queue) context.lookup(properties.getProperty("aortb.edtochief"));
-                MessageProducer prod = session.createProducer(chiefDest);
-                String content = properties.getProperty("aortb.field.content");
-                mmsg.setString(content, topic.getTopicName() + mmsg.getString(content));
-
-                prod.send(mmsg);
-                Logger.getLogger("fr.alma.aortb.editor.Editor").log(Level.INFO, "Send to ChiefEditor {0} with id {1}", new Object[]{mmsg.getString(content), mmsg.getInt(properties.getProperty("aortb.field.id"))});
-            } catch (JMSException ex) {
-                Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NamingException ex) {
-                Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    /*package*/ Properties getProps() {
-        return properties;
-    }
+   /*package*/ Properties getProps() {
+      return properties;
+   }
 }

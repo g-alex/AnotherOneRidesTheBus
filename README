@@ -1,1 +1,7 @@
-Hej !!
+TP de Julien Durillon et Alexandre Garnier, entraînement à openjms.
+
+Pour l'utiliser, faire :
+…$ ant
+…$ java -jar dist/AnotherOneRidesTheBus.jar
+Please give the path of the news file.
+/path/to/file

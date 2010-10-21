@@ -23,6 +23,7 @@ public class PoolToChiefListener implements MessageListener {
          //TODO: log
          return;
       }
+      
       try {
 
          TextMessage tmsg = (TextMessage) msg;
