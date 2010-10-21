@@ -88,7 +88,7 @@ public class NewsPool {
    }
 
    public void readAndSend(Reader reader) {
-      Logger.getLogger("fr.alma.aortb.newspool.NewsPool").info("Reading news");
+      Logger.getLogger(getClass().getCanonicalName()).info("Reading news");
 
 
       BufferedReader br = new BufferedReader(reader);
@@ -120,7 +120,7 @@ public class NewsPool {
             try {
                TextMessage message = session.createTextMessage();
                message.setText(id.toString());
-               Logger.getLogger("fr.alma.aortb.newspool.NewsPool").log(Level.INFO, "Send ID {0} to chief", id.toString());
+               Logger.getLogger(getClass().getCanonicalName()).log(Level.INFO, "Send ID {0} to chief", id.toString());
                producer.send(message);
             } catch (JMSException ex) {
                Logger.getLogger(NewsPool.class.getName()).log(Level.SEVERE, null, ex);
@@ -177,7 +177,7 @@ public class NewsPool {
          MapMessage msg = session.createMapMessage();
          msg.setInt(properties.getProperty("aortb.field.id"), nid);
          msg.setString(properties.getProperty("aortb.field.content"), aNews);
-         Logger.getLogger("fr.alma.aortb.newspool.NewsPool").log(Level.INFO, "Send news with ID {0} to editors", nid.toString());
+         Logger.getLogger(getClass().getCanonicalName()).log(Level.INFO, "Send news with ID {0} to editors", nid.toString());
          producer.send(msg);
       } catch (JMSException ex) {
          Logger.getLogger(NewsPool.class.getName()).log(Level.SEVERE, null, ex);

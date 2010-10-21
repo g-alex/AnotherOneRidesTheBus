@@ -24,7 +24,9 @@ public class PoolToChiefListener implements MessageListener {
          return;
       }
       try {
+
          TextMessage tmsg = (TextMessage) msg;
+         Logger.getLogger(getClass().getCanonicalName()).log(Level.INFO, "got message from pool : {0}", tmsg.getText());
          Integer id = new Integer(Integer.parseInt(DepecheMode.parseId(tmsg.getText())));
 
          EditorInChief.getInstance().addID(id);
