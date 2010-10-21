@@ -26,11 +26,11 @@ import javax.naming.NamingException;
  */
 public class EditorManager {
 
-    private static List<Editor> edPool;
+    private List<Editor> edPool;
     private static EditorManager instance;
-    private static Session session;
-    private static Context context;
-    private static Properties properties;
+    private Session session;
+    private Context context;
+    private Properties properties;
 
     public static EditorManager getInstance() {
         if (instance == null) {
@@ -57,7 +57,7 @@ public class EditorManager {
         connection.start();
     }
 
-    public static void pushEditor(String topic) {
+    public void pushEditor(String topic) {
         try {
             edPool.add(new Editor((Topic) context.lookup(topic)));
         } catch (JMSException ex) {
