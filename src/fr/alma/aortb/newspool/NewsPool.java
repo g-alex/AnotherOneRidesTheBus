@@ -104,7 +104,7 @@ public class NewsPool {
       sendToChief(newsIds);
       sendToEditors(news);
 
-   }
+   }//MIAOU!!
 
    private void sendToChief(List<Integer> newsIds) {
       try {
