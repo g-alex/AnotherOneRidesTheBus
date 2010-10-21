@@ -13,14 +13,12 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -48,7 +46,7 @@ public class Editor {
         connection.start();
     }
 
-    public void readAndSend(Reader reader) {
+    public void readAndSend() {
         try {
             MessageConsumer consumer = session.createConsumer(topic);
             MessageListener listener = new PoolToEditorListener(this);
