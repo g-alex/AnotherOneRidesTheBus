@@ -24,6 +24,7 @@ class PoolToEditorListener implements MessageListener {
         if (!(msg instanceof MapMessage)) {
             return;
         }
+        ed.log("Receive from NewsPool", (MapMessage) msg);
         MapMessage mmsg = (MapMessage) msg;
         ed.sendToChief(mmsg);
     }

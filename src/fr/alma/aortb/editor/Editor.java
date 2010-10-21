@@ -12,6 +12,7 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
@@ -59,14 +60,28 @@ public class Editor {
 
 
     /*package*/ void sendToChief(Message msg) {
-        try {
-            Destination chiefDest = (Queue) context.lookup(properties.getProperty("aortb.edtochief"));
-            MessageProducer prod = session.createProducer(chiefDest);
+        if (!(msg instanceof MapMessage)) {
+            return;
+        } else {
+            MapMessage mmsg = (MapMessage) msg;
+            try {
+                Destination chiefDest = (Queue) context.lookup(properties.getProperty("aortb.edtochief"));
+                MessageProducer prod = session.createProducer(chiefDest);
 
-            prod.send(msg);
+                prod.send(mmsg);
+                log("Send to ChiefEditor", mmsg);
+            } catch (JMSException ex) {
+                Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NamingException ex) {
+                Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    /*package*/ void log(String head, MapMessage msg) {
+        try {
+            Logger.getLogger("fr.alma.aortb.editor.Editor").log(Level.INFO, "{0} {1} with id {2}", new Object[]{head, msg.getString(properties.getProperty("aortb.field.content")), msg.getInt(properties.getProperty("aortb.field.id"))});
         } catch (JMSException ex) {
-            Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NamingException ex) {
             Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
