@@ -69,7 +69,7 @@ public class Editor {
                 MessageProducer prod = session.createProducer(chiefDest);
 
                 prod.send(mmsg);
-                log("Send to ChiefEditor", mmsg);
+                Logger.getLogger("fr.alma.aortb.editor.Editor").log(Level.INFO, "Send to ChiefEditor {0} with id {1}", new Object[]{mmsg.getString(properties.getProperty("aortb.field.content")), mmsg.getInt(properties.getProperty("aortb.field.id"))});
             } catch (JMSException ex) {
                 Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NamingException ex) {
@@ -78,11 +78,7 @@ public class Editor {
         }
     }
 
-    /*package*/ void log(String head, MapMessage msg) {
-        try {
-            Logger.getLogger("fr.alma.aortb.editor.Editor").log(Level.INFO, "{0} {1} with id {2}", new Object[]{head, msg.getString(properties.getProperty("aortb.field.content")), msg.getInt(properties.getProperty("aortb.field.id"))});
-        } catch (JMSException ex) {
-            Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    /*package*/ Properties getProps() {
+        return properties;
     }
 }
