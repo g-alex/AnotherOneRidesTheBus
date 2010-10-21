@@ -5,10 +5,14 @@
 
 package fr.alma.aortb.editor;
 
+import java.util.List;
+
 /**
  *
  * @author indy
  */
 public class Editor {
-
+    private void sentToChief(List<String> news){
+        
+    }
 }
