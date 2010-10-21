@@ -20,6 +20,7 @@ import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -34,8 +35,10 @@ public class Editor {
     private final Context context;
     private final Properties properties;
     private final Session session;
+    private final Topic topic;
 
-    public Editor() throws NamingException, JMSException {
+    public Editor(Topic topic) throws NamingException, JMSException {
+        this.topic = topic;
         this.properties = Main.getInstance().getProps();
         this.context = new InitialContext(this.properties);
         ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
@@ -62,10 +65,12 @@ public class Editor {
     private void sendToChief(List<String> news) {
         try {
             Destination chiefDest = (Queue) context.lookup(properties.getProperty("aortb.edtochief"));
-            Destination warDestination = (Topic) context.lookup(properties.getProperty("aortb.topic.war"));
-            Destination wowDestination = (Topic) context.lookup(properties.getProperty("aortb.topic.wow"));
-            MessageProducer warProd = session.createProducer(warDestination);
-            MessageProducer wowProd = session.createProducer(wowDestination);
+            MessageProducer prod = session.createProducer(chiefDest);
+            for(String str:news){
+               TextMessage message = session.createTextMessage();
+               message.setText(str);
+               prod.send(message);
+            }
         } catch (JMSException ex) {
             Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NamingException ex) {
