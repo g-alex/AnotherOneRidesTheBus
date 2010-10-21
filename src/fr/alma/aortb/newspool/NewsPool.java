@@ -4,6 +4,7 @@
  */
 package fr.alma.aortb.newspool;
 
+import fr.alma.aortb.Main;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -70,9 +71,9 @@ public class NewsPool {
       }
    }
 
-   public NewsPool(Properties props) throws NamingException, JMSException {
-      this.properties = props;
-      this.context = new InitialContext(props);
+   public NewsPool() throws NamingException, JMSException {
+      this.properties = Main.getInstance().getProps();
+      this.context = new InitialContext(this.properties);
       this.currId = 0;
       ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
       Connection connection = (Connection) factory.createConnection();
