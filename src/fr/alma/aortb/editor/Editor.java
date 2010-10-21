@@ -67,9 +67,11 @@ public class Editor {
             try {
                 Destination chiefDest = (Queue) context.lookup(properties.getProperty("aortb.edtochief"));
                 MessageProducer prod = session.createProducer(chiefDest);
+                String content = properties.getProperty("aortb.field.content");
+                mmsg.setString(content, topic.toString() + mmsg.getString(content));
 
                 prod.send(mmsg);
-                Logger.getLogger("fr.alma.aortb.editor.Editor").log(Level.INFO, "Send to ChiefEditor {0} with id {1}", new Object[]{mmsg.getString(properties.getProperty("aortb.field.content")), mmsg.getInt(properties.getProperty("aortb.field.id"))});
+                Logger.getLogger("fr.alma.aortb.editor.Editor").log(Level.INFO, "Send to ChiefEditor {0} with id {1}", new Object[]{mmsg.getString(content), mmsg.getInt(properties.getProperty("aortb.field.id"))});
             } catch (JMSException ex) {
                 Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NamingException ex) {
