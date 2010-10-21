@@ -59,7 +59,7 @@ public class EditorManager {
 
     public static void pushEditor(String topic) {
         try {
-            edPool.add(new Editor((Topic) context.lookup(properties.getProperty("aortb.topic." + topic))));
+            edPool.add(new Editor((Topic) context.lookup(topic)));
         } catch (JMSException ex) {
             Logger.getLogger(EditorManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NamingException ex) {
