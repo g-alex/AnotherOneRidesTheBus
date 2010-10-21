@@ -28,7 +28,7 @@ public class EdToChiefListener implements MessageListener {
         }
         try {
             MapMessage mmsg = (MapMessage) msg;
-            Properties properties = Main.getInstance().getProps();
+            Properties properties = Main.props;
             Integer id = mmsg.getInt(properties.getProperty("aortb.field.id"));
             if (EditorInChief.getInstance().hasID(id)) {
                 EditorInChief.getInstance().removeID(id);

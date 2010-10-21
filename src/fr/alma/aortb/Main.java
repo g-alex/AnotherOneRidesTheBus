@@ -24,34 +24,26 @@ import javax.naming.NamingException;
  */
 public class Main {
 
-   private Properties props;
+   public static Properties props;
 
-   private static Main instance;
+   private static Main instance = null;
 
    /**
     * @param args the command line arguments
     */
    public static void main(String[] args) {
-      getInstance().go();
-   }
-
-   private Main() {
+      props = new Properties();
       try {
-         props = new Properties();
-         props.load(getClass().getClassLoader().getResourceAsStream("jndi.properties"));
+         ClassLoader cl = Main.class.getClassLoader();
+         props.load(cl.getResourceAsStream("jndi.properties"));
+
+         go();
       } catch (IOException ex) {
          Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
       }
    }
 
-   public static Main getInstance() {
-      if (instance == null) {
-         instance = new Main();
-      }
-      return instance;
-   }
-
-   public void go() {
+   public static void go() {
       {
          FileReader fr = null;
          try {
@@ -83,11 +75,7 @@ public class Main {
       }
    }
 
-   public Properties getProps() {
-      return props;
-   }
-
-   private String askForFile() {
+   private static String askForFile() {
       try {
          System.out.println("Please give the path of the news file.");
          BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));

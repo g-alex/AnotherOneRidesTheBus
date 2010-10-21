@@ -12,7 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.Topic;
@@ -48,7 +47,7 @@ public class EditorManager {
     private EditorManager() throws NamingException, JMSException {
         edPool = new ArrayList<Editor>();
 
-        properties = Main.getInstance().getProps();
+        properties = Main.props;
         context = new InitialContext(properties);
         ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
         Connection connection = (Connection) factory.createConnection();

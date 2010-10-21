@@ -8,10 +8,13 @@ import fr.alma.aortb.Main;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
@@ -51,7 +54,7 @@ public class NewsPool {
    static {
       warKeywords = new HashSet<String>();
       try {
-         BufferedReader reader = new BufferedReader(new FileReader("war.txt"));
+         BufferedReader reader = new BufferedReader(new InputStreamReader(Main.class.getClassLoader().getResourceAsStream("war.txt")));
          String str;
          while ((str = reader.readLine()) != null) {
             warKeywords.add(str);
@@ -62,7 +65,7 @@ public class NewsPool {
 
       wowKeywords = new HashSet<String>();
       try {
-         BufferedReader reader = new BufferedReader(new FileReader("wow.txt"));
+         BufferedReader reader = new BufferedReader(new InputStreamReader(Main.class.getClassLoader().getResourceAsStream("wow.txt")));
          String str;
          while ((str = reader.readLine()) != null) {
             wowKeywords.add(str);
@@ -73,7 +76,7 @@ public class NewsPool {
    }
 
    public NewsPool() throws NamingException, JMSException {
-      this.properties = Main.getInstance().getProps();
+      this.properties = Main.props;
       this.context = new InitialContext(this.properties);
       this.currId = 0;
       ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
@@ -85,17 +88,19 @@ public class NewsPool {
    }
 
    public void readAndSend(Reader reader) {
+      Logger.getLogger("fr.alma.aortb.newspool.NewsPool").info("Reading news");
+
+
       BufferedReader br = new BufferedReader(reader);
 
-      List<String> news = new ArrayList<String>();
+      Map<Integer,String> news = new HashMap<Integer, String>();
       List<Integer> newsIds = new ArrayList<Integer>();
 
 
       try {
          String str = null;
          while ((str = br.readLine()) != null) {
-            news.add(this.currId + ":" + str);
-            newsIds.add(currId);
+            news.put(this.currId, str);
             ++currId;
          }
       } catch (IOException e) {
@@ -115,6 +120,7 @@ public class NewsPool {
             try {
                TextMessage message = session.createTextMessage();
                message.setText(id.toString());
+               Logger.getLogger("fr.alma.aortb.newspool.NewsPool").log(Level.INFO, "Send ID {0} to chief", id.toString());
                producer.send(message);
             } catch (JMSException ex) {
                Logger.getLogger(NewsPool.class.getName()).log(Level.SEVERE, null, ex);
@@ -127,7 +133,7 @@ public class NewsPool {
       }
    }
 
-   private void sendToEditors(List<String> news) {
+   private void sendToEditors(Map<Integer,String> news) {
 
 
       Boolean isWar = Boolean.FALSE;
@@ -140,11 +146,12 @@ public class NewsPool {
          MessageProducer wowProd = session.createProducer(wowDestination);
 
 
-         for (String aNews : news) {
+         for (Integer nid : news.keySet()) {
+            String aNews = news.get(nid);
             for (String keyword : wowKeywords) {
                if (aNews.contains(keyword)) {
                   isWow = Boolean.TRUE;
-                  sendNews(wowProd, aNews);
+                  sendNews(wowProd, nid, aNews);
                   break;
                }
             }
@@ -152,7 +159,7 @@ public class NewsPool {
                for (String keyword : warKeywords) {
                   if (aNews.contains(keyword)) {
                      isWar = Boolean.TRUE;
-                     sendNews(warProd, aNews);
+                     sendNews(warProd, nid, aNews);
                      break;
                   }
                }
@@ -165,12 +172,13 @@ public class NewsPool {
       }
    }
 
-   private void sendNews(MessageProducer wowProd, String aNews) {
+   private void sendNews(MessageProducer producer, Integer nid, String aNews) {
       try {
          MapMessage msg = session.createMapMessage();
-         msg.setInt(properties.getProperty("aortb.field.id"), currId);
+         msg.setInt(properties.getProperty("aortb.field.id"), nid);
          msg.setString(properties.getProperty("aortb.field.content"), aNews);
-         wowProd.send(msg);
+         Logger.getLogger("fr.alma.aortb.newspool.NewsPool").log(Level.INFO, "Send news with ID {0} to editors", nid.toString());
+         producer.send(msg);
       } catch (JMSException ex) {
          Logger.getLogger(NewsPool.class.getName()).log(Level.SEVERE, null, ex);
       }

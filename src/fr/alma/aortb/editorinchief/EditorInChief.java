@@ -39,7 +39,7 @@ public class EditorInChief {
 
          ids = new HashSet<Integer>();
 
-         context = new InitialContext(Main.getInstance().getProps());
+         context = new InitialContext(Main.props);
          ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
          Connection connection = factory.createConnection();
          session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -53,7 +53,7 @@ public class EditorInChief {
 
    private void listenToPool() {
       try {
-         Destination dest = (Destination) context.lookup(Main.getInstance().getProps().getProperty("aortb.pooltochief"));
+         Destination dest = (Destination) context.lookup(Main.props.getProperty("aortb.pooltochief"));
          MessageConsumer consumer = session.createConsumer(dest);
          MessageListener listener = new PoolToChiefListener();
          consumer.setMessageListener(listener);
@@ -66,7 +66,7 @@ public class EditorInChief {
 
    private void listenToEditors() {
       try {
-         Destination dest = (Destination) context.lookup(Main.getInstance().getProps().getProperty("aortb.edtochief"));
+         Destination dest = (Destination) context.lookup(Main.props.getProperty("aortb.edtochief"));
          MessageConsumer consumer = session.createConsumer(dest);
          MessageListener listener = new EdToChiefListener();
          consumer.setMessageListener(listener);

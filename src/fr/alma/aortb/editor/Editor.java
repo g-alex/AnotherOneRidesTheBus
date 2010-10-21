@@ -36,7 +36,7 @@ public class Editor {
 
     public Editor(Topic topic) throws NamingException, JMSException {
         this.topic = topic;
-        this.properties = Main.getInstance().getProps();
+        this.properties = Main.props;
         this.context = new InitialContext(this.properties);
         ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
         Connection connection = (Connection) factory.createConnection();
