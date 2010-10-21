@@ -101,6 +101,7 @@ public class NewsPool {
          String str = null;
          while ((str = br.readLine()) != null) {
             news.put(this.currId, str);
+            newsIds.add(this.currId);
             ++currId;
          }
       } catch (IOException e) {
@@ -113,6 +114,7 @@ public class NewsPool {
    }//MIAOU!!
 
    private void sendToChief(List<Integer> newsIds) {
+      Logger.getLogger(getClass().getCanonicalName()).log(Level.INFO, "Begin send to chief");
       try {
          Destination chiefDest = (Queue) context.lookup(properties.getProperty("aortb.pooltochief"));
          MessageProducer producer = session.createProducer(chiefDest);

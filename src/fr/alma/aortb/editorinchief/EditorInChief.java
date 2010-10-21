@@ -84,20 +84,20 @@ public class EditorInChief {
       return instance;
    }
 
-   public void addID(Integer id) {
+   public synchronized void addID(Integer id) {
       this.ids.add(id);
    }
 
-   public Boolean hasID(Integer id) {
+   public synchronized Boolean hasID(Integer id) {
       return this.ids.contains(id);
    }
 
-   public void removeID(Integer id) {
+   public synchronized void removeID(Integer id) {
       this.ids.remove(id);
    }
 
    public void run() {
-      listenToEditors();
       listenToPool();
+      listenToEditors();
    }
 }
